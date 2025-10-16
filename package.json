@@ -4,7 +4,8 @@
   "description": "this api is about jobs",
   "main": "src/server.ts",
   "scripts": {
-    "start": "node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --config nodemon.json src/server.ts"
   },
