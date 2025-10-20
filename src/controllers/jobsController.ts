@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction } from "express"
+import { Request, Response, NextFunction } from "express";
 import { Job } from "@/models";
 import { db } from "@/lib/db";
+import { asyncMiddleware } from "@/middlewares/asyncHandler";
 
-export const getJobs = async (req: Request, res: Response, next: NextFunction) => {
+export const getJobs = asyncMiddleware(async (req: Request, res: Response, next: NextFunction) => {
   try {
     const jobs = (await db<Job>("jobs").select("*")).sort();
 
@@ -10,9 +11,9 @@ export const getJobs = async (req: Request, res: Response, next: NextFunction) =
   } catch (error) {
     next(error)
   }
-};
+});
 
-export const getJobById = async (req: Request, res: Response, next: NextFunction) => { 
+export const getJobById = asyncMiddleware(async (req: Request, res: Response, next: NextFunction) => { 
   try {
     const job = await db<Job>("jobs").where("id", req.params.id).first();
 
@@ -20,9 +21,9 @@ export const getJobById = async (req: Request, res: Response, next: NextFunction
   } catch (error) {
     next(error)
   }
-};
+});
 
-export const createJob = async (req: Request, res: Response, next: NextFunction) => {
+export const createJob = asyncMiddleware(async (req: Request, res: Response, next: NextFunction) => {
   try {
     await db<Job>("jobs").insert(req.body);
 
@@ -30,4 +31,4 @@ export const createJob = async (req: Request, res: Response, next: NextFunction)
   } catch (error) {
     next(error);
   }
-};
+});

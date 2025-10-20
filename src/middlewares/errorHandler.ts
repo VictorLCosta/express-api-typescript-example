@@ -2,7 +2,7 @@ import config from "@/config";
 import ErrorHandler from "@/utils/errorHandler";
 import { Request, Response, NextFunction } from "express";
 
-export const errorsMiddleware = (err: ErrorHandler, req: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: ErrorHandler, req: Request, res: Response, next: NextFunction) => {
   err.message = err.message || 'Internal Server Error';
 
   if (config.nodeEnv === 'development') {
