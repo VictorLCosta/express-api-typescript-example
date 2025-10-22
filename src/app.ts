@@ -2,6 +2,9 @@ import express from "express";
 import jobsRoutes from "./routes/jobsRoutes";
 import authRoutes from "./routes/authRoutes";
 import { errorHandler } from "./middlewares/errorHandler";
+
+import cookieParser from "cookie-parser";
+
 import ErrorHandler from "./utils/errorHandler";
 
 const app = express();
@@ -11,6 +14,8 @@ process.on('uncaughtException', err => {
     console.log('Shutting down due to uncaught exception.')
     process.exit(1);
 });
+
+app.use(cookieParser());
 
 app.use(express.json());
 

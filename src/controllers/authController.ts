@@ -2,8 +2,9 @@ import { db } from "@/lib/db";
 import { asyncMiddleware } from "@/middlewares/asyncHandler";
 import { comparePassword, getJwtToken, User } from "@/models";
 import { NextFunction, Request, Response } from "express";
-import bcrypt from 'bcrypt';
 import ErrorHandler from "@/utils/errorHandler";
+import { sendToken } from "@/utils/jwtToken";
+import bcrypt from 'bcrypt';
 
 export const registerUser = asyncMiddleware(async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, role } = req.body;
@@ -15,11 +16,11 @@ export const registerUser = asyncMiddleware(async (req: Request, res: Response, 
       name,
       email,
       password: hashedPassword,
-      role,
     })
-    .returning("*");
+    .returning("*")
+    .first();
 
-  return newUser;
+  return sendToken(newUser!, 200, res, req);
 });
 
 export const loginUser = asyncMiddleware(async (req: Request, res: Response, next: NextFunction) => {
@@ -43,8 +44,5 @@ export const loginUser = asyncMiddleware(async (req: Request, res: Response, nex
 
   const token = getJwtToken(user.email);
 
-  return res.status(200).json({
-    success: true,
-    token,
-  });
+  return sendToken(user, 200, res, req);
 });
