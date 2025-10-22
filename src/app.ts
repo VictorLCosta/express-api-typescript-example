@@ -1,5 +1,6 @@
 import express from "express";
 import jobsRoutes from "./routes/jobsRoutes";
+import authRoutes from "./routes/authRoutes";
 import { errorHandler } from "./middlewares/errorHandler";
 import ErrorHandler from "./utils/errorHandler";
 
@@ -14,6 +15,7 @@ process.on('uncaughtException', err => {
 app.use(express.json());
 
 app.use("/api/jobs", jobsRoutes);
+app.use("/api/auth", authRoutes)
 
 app.all("*", (req, res, next) => {
     next(new ErrorHandler(`Can't find ${req.originalUrl} on this server!`, 404));

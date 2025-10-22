@@ -1,3 +1,5 @@
+import config from "@/config";
+import jwt from "jsonwebtoken";
 import { z } from "zod";
 
 export const UserSchema = z.object({
@@ -22,5 +24,16 @@ export const UserSchema = z.object({
     .date()
     .optional(),
 });
+
+export const getJwtToken = (userId: string) => {
+  return jwt.sign({ id: userId }, config.jwtSecret, {
+    expiresIn: "1h",
+  });
+};
+
+export const comparePassword = async (enteredPassword: string, hashedPassword: string) => {
+  const bcrypt = await import('bcrypt');
+  return bcrypt.compare(enteredPassword, hashedPassword);
+}
 
 export type User = z.infer<typeof UserSchema>;
