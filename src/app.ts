@@ -22,7 +22,7 @@ app.use(express.json());
 app.use("/api/jobs", jobsRoutes);
 app.use("/api/auth", authRoutes)
 
-app.all("*", (req, res, next) => {
+app.all("/{*any}", (req, _, next) => {
     next(new ErrorHandler(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
