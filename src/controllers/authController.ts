@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { asyncMiddleware } from "@/middlewares/asyncHandler";
-import { comparePassword, getJwtToken, User } from "@/models";
+import { comparePassword, getJwtToken, getResetPasswordToken, User } from "@/models";
 import { NextFunction, Request, Response } from "express";
 import ErrorHandler from "@/utils/errorHandler";
 import { sendToken } from "@/utils/jwtToken";
@@ -42,7 +42,28 @@ export const loginUser = asyncMiddleware(async (req: Request, res: Response, nex
     return next(new ErrorHandler("Invalid email or password", 401));
   }
 
-  const token = getJwtToken(user.email);
-
   return sendToken(user, 200, res, req);
+});
+
+export const forgotPassword = asyncMiddleware(async (req, _, next) => {
+  const { email } = req.body;
+
+  const user = await db<User>("users").where({ email }).first();
+
+  if (!user)
+    return next(new ErrorHandler("User not found with this email", 404));
+
+  const resetToken = await getResetPasswordToken(user);
+});
+
+export const logout = asyncMiddleware( async(_, res, __) => {
+    res.cookie('token', 'none', {
+        expires : new Date(Date.now()),
+        httpOnly : true 
+    });
+
+    res.status(200).json({
+        success : true,
+        message : 'Logged out successfully.'
+    });
 });

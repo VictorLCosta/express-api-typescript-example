@@ -36,4 +36,19 @@ export const comparePassword = async (enteredPassword: string, hashedPassword: s
   return bcrypt.compare(enteredPassword, hashedPassword);
 }
 
+export const getResetPasswordToken = async (user: User) => {
+  const crypto = await import('crypto');
+
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  user.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  user.resetPasswordExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+  return resetToken;
+};
+
 export type User = z.infer<typeof UserSchema>;
