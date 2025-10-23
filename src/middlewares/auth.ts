@@ -16,7 +16,7 @@ export const isAutheticated = asyncMiddleware(async (req, _, next) => {
 
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
-    req.user = decoded;
+    req.user = decoded as { id: string; role: string };
     
     next();
   } catch (err) {
