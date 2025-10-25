@@ -1,6 +1,7 @@
 import express from "express";
 import jobsRoutes from "./routes/jobsRoutes";
 import authRoutes from "./routes/authRoutes";
+import usersRoutes from "./routes/userRoutes";
 import { errorHandler } from "./middlewares/errorHandler";
 
 import cookieParser from "cookie-parser";
@@ -20,7 +21,8 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/jobs", jobsRoutes);
-app.use("/api/auth", authRoutes)
+app.use("/api/auth", authRoutes);
+app.use("/api/users", usersRoutes)
 
 app.all("/{*any}", (req, _, next) => {
     next(new ErrorHandler(`Can't find ${req.originalUrl} on this server!`, 404));
