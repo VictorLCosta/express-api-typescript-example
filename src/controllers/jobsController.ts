@@ -38,6 +38,10 @@ export const createJob = asyncMiddleware(async (req: Request, res: Response, nex
 
 export const deleteJob = asyncMiddleware(async (req: Request, res: Response, next: NextFunction) => {
   try {
+    if (req.user?.role !== "admin") {
+      return next(new ErrorHandler("Unauthorized: Admins only", 403));
+    }
+
     const result = await db<Job>("jobs").where("id", req.params.id).del();
 
     if (result === 0) {
