@@ -33,3 +33,15 @@ export const updatePassword = asyncMiddleware(async (req, res, next) => {
 
   return sendToken(req.user as User, 200, res, req);
 });
+
+export const updateUser = asyncMiddleware(async (req, res, next) => {
+  const user: User = { ...req.body };
+
+  await db<User>("users")
+    .where({ email: req.user?.email })
+    .update(user);
+
+  res
+    .status(200)
+    .json({ success: true, message: "User updated successfully" });
+});
