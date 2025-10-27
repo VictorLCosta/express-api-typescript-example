@@ -17,7 +17,6 @@ export const jobSchema = z.object({
     .max(1000, "Job description can not exceed 1000 characters."),
 
   email: z
-    .string()
     .email("Please add a valid email address.")
     .optional(),
 

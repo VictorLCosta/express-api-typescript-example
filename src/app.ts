@@ -1,4 +1,6 @@
 import express from "express";
+import fileUpload from "express-fileupload";
+
 import jobsRoutes from "./routes/jobsRoutes";
 import authRoutes from "./routes/authRoutes";
 import usersRoutes from "./routes/userRoutes";
@@ -19,6 +21,8 @@ process.on('uncaughtException', err => {
 app.use(cookieParser());
 
 app.use(express.json());
+
+app.use(fileUpload());
 
 app.use("/api/jobs", jobsRoutes);
 app.use("/api/auth", authRoutes);
