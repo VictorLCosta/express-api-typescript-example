@@ -1,6 +1,7 @@
 import express from "express";
 import fileUpload from "express-fileupload";
 import rateLimit from "express-rate-limit";
+import helmet from "helmet";
 
 import jobsRoutes from "./routes/jobsRoutes";
 import authRoutes from "./routes/authRoutes";
@@ -31,6 +32,8 @@ const limiter = rateLimit({
     message: 'Too many requests from this IP, please try again after 15 minutes'
 });
 app.use(limiter);
+
+app.use(helmet());
 
 app.use("/api/jobs", jobsRoutes);
 app.use("/api/auth", authRoutes);
