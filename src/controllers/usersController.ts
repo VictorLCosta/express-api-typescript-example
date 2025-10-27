@@ -38,10 +38,33 @@ export const updateUser = asyncMiddleware(async (req, res, next) => {
   const user: User = { ...req.body };
 
   await db<User>("users")
-    .where({ email: req.user?.email })
+    .where({ email: req.body?.email })
     .update(user);
 
   res
     .status(200)
     .json({ success: true, message: "User updated successfully" });
+});
+
+export const deleteUser = asyncMiddleware(async (req, res, next) => {
+  const user = await db<User>("users")
+    .where({ email: req.body?.email })
+    .first();
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  res.cookie("token", "none", {
+    expires: new Date(Date.now()),
+    httpOnly: true,
+  });
+
+  await db<User>("users")
+    .where({ email: req.body?.email })
+    .del();
+
+  res
+    .status(204)
+    .json({ success: true, message: "User deleted successfully" });
 });
