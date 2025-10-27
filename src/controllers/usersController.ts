@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { asyncMiddleware } from "@/middlewares/asyncHandler";
-import { comparePassword, User } from "@/models";
+import { comparePassword, Job, User } from "@/models";
 import { sendToken } from "@/utils/jwtToken";
 
 export const getCurrentUser = asyncMiddleware(async (req, res, next) => {
@@ -67,4 +67,10 @@ export const deleteUser = asyncMiddleware(async (req, res, next) => {
   res
     .status(204)
     .json({ success: true, message: "User deleted successfully" });
+});
+
+export const getAppliedJobs = asyncMiddleware(async (req, res, next) => {
+  const jobs = await db<Job>("jobs").where("applicantsApplied.id", req.user?.email);
+
+  res.status(200).json({ success: true, jobs });
 });
