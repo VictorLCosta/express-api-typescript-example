@@ -3,6 +3,7 @@ import fileUpload from "express-fileupload";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import { xss } from "express-xss-sanitizer";
+import hpp from "hpp";
 
 import jobsRoutes from "./routes/jobsRoutes";
 import authRoutes from "./routes/authRoutes";
@@ -30,6 +31,8 @@ app.use(express.json());
 app.use(fileUpload());
 
 app.use(xss())
+
+app.use(hpp());
 
 const limiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 minutes
