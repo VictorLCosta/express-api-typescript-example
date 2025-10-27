@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import { 
   deleteUser, 
+  deleteUserAdmin, 
   getAllUsers, 
   getAppliedJobs, 
   getCurrentUser, 
@@ -20,5 +21,6 @@ router.put("/me/update", isAutheticated, updateUser);
 router.delete("/me/delete", isAutheticated, deleteUser);
 router.get("/me/appliedjobs", isAutheticated, getAppliedJobs);
 router.get("/", isAutheticated, authorizationMiddleware("admin"), getAllUsers);
+router.get("/:email", isAutheticated, authorizationMiddleware("admin"), deleteUserAdmin);
 
 export default router;

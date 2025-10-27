@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { asyncMiddleware } from "@/middlewares/asyncHandler";
 import { comparePassword, Job, User } from "@/models";
+import ErrorHandler from "@/utils/errorHandler";
 import { sendToken } from "@/utils/jwtToken";
 
 export const getCurrentUser = asyncMiddleware(async (req, res, next) => {
@@ -79,4 +80,22 @@ export const getAllUsers = asyncMiddleware(async (req, res, next) => {
   const users = await db<User>("users").select("*");
 
   res.status(200).json({ success: true, users });
+});
+
+export const deleteUserAdmin = asyncMiddleware(async (req, res, next) => {
+  const user = await db<User>("users")
+    .where({ email: req.params.email })
+    .first();
+
+  if (!user) {
+    return next(new ErrorHandler("User not found", 404));
+  }
+
+  await db<User>("users")
+    .where({ email: req.params.email })
+    .del();
+
+  res
+    .status(204)
+    .json({ success: true, message: "User deleted successfully" });
 });
