@@ -74,3 +74,9 @@ export const getAppliedJobs = asyncMiddleware(async (req, res, next) => {
 
   res.status(200).json({ success: true, jobs });
 });
+
+export const getAllUsers = asyncMiddleware(async (req, res, next) => {
+  const users = await db<User>("users").select("*");
+
+  res.status(200).json({ success: true, users });
+});
