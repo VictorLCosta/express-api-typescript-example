@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import { Job } from "@/models";
 import { db } from "@/lib/db";
 import { asyncMiddleware } from "@/middlewares/asyncHandler";
-import { ca } from "zod/v4/locales";
 import path from "path";
 import ErrorHandler from "@/utils/errorHandler";
+import { UploadedFile } from "express-fileupload";
 
 export const getJobs = asyncMiddleware(async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -65,7 +65,7 @@ export const applyJob = asyncMiddleware(async (req, res, next) => {
     return next({ status: 400, message: "The application deadline has passed" });
   }
 
-  const file = req.files?.file;
+  const file = req.files?.file as UploadedFile;
 
   if (!file) {
     return next({ status: 400, message: "Resume file is required" });
