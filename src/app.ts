@@ -2,6 +2,7 @@ import express from "express";
 import fileUpload from "express-fileupload";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
+import { xss } from "express-xss-sanitizer";
 
 import jobsRoutes from "./routes/jobsRoutes";
 import authRoutes from "./routes/authRoutes";
@@ -20,11 +21,15 @@ process.on('uncaughtException', err => {
     process.exit(1);
 });
 
+app.use(helmet());
+
 app.use(cookieParser());
 
 app.use(express.json());
 
 app.use(fileUpload());
+
+app.use(xss())
 
 const limiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 minutes
@@ -32,8 +37,6 @@ const limiter = rateLimit({
     message: 'Too many requests from this IP, please try again after 15 minutes'
 });
 app.use(limiter);
-
-app.use(helmet());
 
 app.use("/api/jobs", jobsRoutes);
 app.use("/api/auth", authRoutes);
