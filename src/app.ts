@@ -13,6 +13,7 @@ import { errorHandler } from "./middlewares/errorHandler";
 import cookieParser from "cookie-parser";
 
 import ErrorHandler from "./utils/errorHandler";
+import { setupSwagger } from "./swagger";
 
 const app = express();
 
@@ -45,10 +46,8 @@ app.use("/api/jobs", jobsRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes)
 
-app.all("/{*any}", (req, _, next) => {
-    next(new ErrorHandler(`Can't find ${req.originalUrl} on this server!`, 404));
-});
-
 app.use(errorHandler);
+
+setupSwagger(app);
 
 export default app;
